@@ -13,6 +13,7 @@ namespace LinearObolon
     public partial class MainForm : Form
     {
         private List<Point> points = new List<Point>();
+        private Dictionary<Point, Point> segments;
 
         private Graphics graphics;
 
@@ -21,22 +22,21 @@ namespace LinearObolon
         private LinObolonka lin;
         private CoordinateSystem cooSystem;
 
-        //private Radar radar;
-        //private Graphics graphicsRadar;
+        private RadarForm radarForm;
 
-        //Цілковита прозорість панелі (MUST TO DO)
+        bool isFirstInit;
+        bool radarState;
 
         public MainForm()
         {
+            isFirstInit = true;
             InitializeComponent();
+            isFirstInit = false;
             graphics = panel1.CreateGraphics();
             pointCount = 0;
             font = new System.Drawing.Font("Modern No 20", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             lin = new LinObolonka();
             cooSystem = new CoordinateSystem(this, panel1);
-
-            //radar = new Radar(radarPanel);
-            //graphicsRadar = radarPanel.CreateGraphics();
         }
 
         /**Обновляємо дані
@@ -52,12 +52,11 @@ namespace LinearObolon
             graphics = panel1.CreateGraphics();
             stdPoints.Items.Clear();
             sortPoints.Items.Clear();
-            lin.clear();
+            lin.Clear();
             ClearPanel();
             cooSystem.paintCoordinateSystem(panel1);
             
         }
-
 
         /**Очистка всієї панелі
          * 
@@ -88,13 +87,12 @@ namespace LinearObolon
         }
 
         /**Оболонка
-         * 
          * Малюємо саму оболонку на панелі
          * 
          */ 
         private void DrawMBO()
         {
-            //ClearPanel();
+            segments = new Dictionary<Point, Point>();
             cooSystem.paintCoordinateSystem(panel1);
 
             for (int i = 0; i < lin.Count - 1; ++i)
@@ -105,31 +103,46 @@ namespace LinearObolon
             sortPoints.Items.Clear();
             stdPoints.Items.Clear();
 
-            for (int i = 0; i < lin.Count-1; ++i)
+            for (int i = 0; i < lin.Count; ++i)
             {
                 sortPoints.Items.Add(cooSystem.ToStandartCoordinates(lin[i]));
                 stdPoints.Items.Add(lin[i].X + " " + lin[i].Y);
             }
+
+            for(int i = 0; i < lin.Count - 1; ++i)
+            {
+                segments.Add(cooSystem.ToStandartCoordinates(lin[i]), cooSystem.ToStandartCoordinates(lin[i+1]));
+            }
         }
 
+        private void RadarInitialize()
+        {
+            radarForm = new RadarForm(panel1, this);
+            radarForm.Show();
+        }
+
+        #region Events
         private void start_Click(object sender, EventArgs e)
         {
-            sortPoints.Items.Clear();
-
-            lin.createLinObolonka();
-
-            foreach (PointF point in lin)
+            if (pointCount > 2)
             {
-                sortPoints.Items.Add(point.X + " " + point.Y);
+                sortPoints.Items.Clear();
+
+                lin.CreateLinObolonka();
+
+                foreach (PointF point in lin)
+                {
+                    sortPoints.Items.Add(point.X + " " + point.Y);
+                }
+
+                DrawMBO();
             }
-
-            DrawMBO();
-
-            timer1.Start();
-
-            //radarPanel.Visible = true;
+            else
+            {
+                MessageBox.Show("There should be at least 3 points!");
+                refreshData();
+            }
         }
-
         private void paint_Click(object sender, EventArgs e)
         {
             refreshData();
@@ -149,14 +162,48 @@ namespace LinearObolon
 
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
-            refreshData();
+            if (!isFirstInit)
+            {
+                refreshData(); 
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //graphicsRadar.DrawLine(new Pen(Color.ForestGreen, 1), radar.XBegin, radar.YBegin, radar.XCoordinate, radar.YCoordinate);
-
-            //radar.moveArrow();
+            
         }
+
+        private void radarOn_Click(object sender, EventArgs e)
+        {
+            RadarInitialize();
+            radarState = true;
+            radarForm.StartTimer();
+        }
+
+        private void radarOff_Click(object sender, EventArgs e)
+        {
+            radarForm.Close();
+            radarForm.StopTimer();
+            radarState = false;
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            timer1.Stop();
+        }
+
+        private void MainForm_LocationChanged(object sender, EventArgs e)
+        {
+            if (radarForm != null && radarState)
+            {
+                //MessageBox.Show("You can`t relocate form while scaning");
+                radarForm.Relocate();
+                radarForm.BringToFront();
+            }
+        }
+
+        #endregion
+
+
     }
 }

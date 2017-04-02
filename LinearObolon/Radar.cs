@@ -13,6 +13,13 @@ namespace LinearObolon
     {
         private Panel panel;
 
+        private bool radarState;
+        public bool RadarState
+        {
+           get { return radarState; }
+           set { radarState = value; } 
+        }
+
         private int r;
 
         private int fiTick;
@@ -58,8 +65,9 @@ namespace LinearObolon
         public Radar(Panel panel)
         {
             this.panel = panel;
+            RadarState = false;
 
-            r = 500;
+            r = Math.Max(panel.ClientSize.Width, panel.ClientSize.Height);
 
             xBegin = panel.ClientSize.Width / 2;
             yBegin = panel.ClientSize.Height / 2;
@@ -67,20 +75,20 @@ namespace LinearObolon
             fiTick = -90;
         }
 
-        public void moveArrow()
+        public void MoveArrow()
         {
-            fiTick += 6;
+            fiTick += 1;
 
-            xCoordinate = xBegin + r * cosFi(fiTick);
-            yCoordinate = yBegin + r * sinFi(fiTick);
+            xCoordinate = xBegin + r * CosFi(fiTick);
+            yCoordinate = yBegin + r * SinFi(fiTick);
         }
 
-        private float cosFi(int fi)
+        private float CosFi(int fi)
         {
             return (float)Math.Cos((Math.PI * fi) / 180);
         }
 
-        private float sinFi(int fi)
+        private float SinFi(int fi)
         {
             return (float)Math.Sin((Math.PI * fi) / 180);
         }
