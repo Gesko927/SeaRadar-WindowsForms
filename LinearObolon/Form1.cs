@@ -93,11 +93,14 @@ namespace LinearObolon
         private void DrawMBO()
         {
             segments = new Dictionary<Point, Point>();
+            graphics.Clear(Color.DodgerBlue);
             cooSystem.paintCoordinateSystem(panel1);
 
             for (int i = 0; i < lin.Count - 1; ++i)
             {
-                graphics.DrawLine(new Pen(Color.Red, 2), cooSystem.ToStandartCoordinates(lin[i]), cooSystem.ToStandartCoordinates(lin[i + 1]));
+                Point temp = cooSystem.ToStandartCoordinates(lin[i]);
+                graphics.FillEllipse(Brushes.Red, new Rectangle(new Point(temp.X - 5, temp.Y - 5), new Size(10, 10)));
+                graphics.DrawLine(new Pen(Color.Red, 2), temp, cooSystem.ToStandartCoordinates(lin[i + 1]));
             }
 
             sortPoints.Items.Clear();

@@ -75,7 +75,7 @@
             this.trackBar1.Margin = new System.Windows.Forms.Padding(4);
             this.trackBar1.Maximum = 9;
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(139, 45);
+            this.trackBar1.Size = new System.Drawing.Size(139, 56);
             this.trackBar1.TabIndex = 3;
             this.trackBar1.Value = 1;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
@@ -84,22 +84,22 @@
             // 
             this.stdPoints.Font = new System.Drawing.Font("Modern No. 20", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stdPoints.FormattingEnabled = true;
-            this.stdPoints.ItemHeight = 17;
+            this.stdPoints.ItemHeight = 21;
             this.stdPoints.Location = new System.Drawing.Point(5, 149);
             this.stdPoints.Margin = new System.Windows.Forms.Padding(4);
             this.stdPoints.Name = "stdPoints";
-            this.stdPoints.Size = new System.Drawing.Size(205, 174);
+            this.stdPoints.Size = new System.Drawing.Size(205, 172);
             this.stdPoints.TabIndex = 1;
             // 
             // sortPoints
             // 
             this.sortPoints.Font = new System.Drawing.Font("Modern No. 20", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sortPoints.FormattingEnabled = true;
-            this.sortPoints.ItemHeight = 18;
+            this.sortPoints.ItemHeight = 22;
             this.sortPoints.Location = new System.Drawing.Point(4, 436);
             this.sortPoints.Margin = new System.Windows.Forms.Padding(4);
             this.sortPoints.Name = "sortPoints";
-            this.sortPoints.Size = new System.Drawing.Size(207, 166);
+            this.sortPoints.Size = new System.Drawing.Size(207, 158);
             this.sortPoints.TabIndex = 2;
             // 
             // panel2

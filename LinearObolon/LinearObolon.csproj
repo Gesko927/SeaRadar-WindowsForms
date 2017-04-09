@@ -63,6 +63,8 @@
     <Compile Include="RadarForm.Designer.cs">
       <DependentUpon>RadarForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SeaMap.cs" />
+    <Compile Include="Ship.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

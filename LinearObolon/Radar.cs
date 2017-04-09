@@ -13,13 +13,6 @@ namespace LinearObolon
     {
         private Panel panel;
 
-        private bool radarState;
-        public bool RadarState
-        {
-           get { return radarState; }
-           set { radarState = value; } 
-        }
-
         private int r;
 
         private int fiTick;
@@ -65,7 +58,6 @@ namespace LinearObolon
         public Radar(Panel panel)
         {
             this.panel = panel;
-            RadarState = false;
 
             r = Math.Max(panel.ClientSize.Width, panel.ClientSize.Height);
 

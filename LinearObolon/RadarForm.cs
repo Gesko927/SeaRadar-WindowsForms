@@ -63,6 +63,7 @@ namespace LinearObolon
         public void Relocate()
         {
             this.Location = new Point(panel.Location.X + form.Location.X + 8, panel.Location.Y + form.Location.Y + 30);
+            this.BringToFront();
         }
     }
 }
