@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,16 +16,11 @@ namespace LinearObolon
         private Dictionary<Point, Point> segments;
 
         private Graphics graphics;
-        private Radar radar;
+
         private int pointCount;
         private Font font;
         private LinObolonka lin;
         private CoordinateSystem cooSystem;
-        private SeaMap sea;
-        private Bitmap bitmap;
-        private Graphics mainPanelGraphics;
-
-
 
         private RadarForm radarForm;
 
@@ -38,15 +32,11 @@ namespace LinearObolon
             isFirstInit = true;
             InitializeComponent();
             isFirstInit = false;
-            EnableDoubleBuffering();
+            graphics = panel1.CreateGraphics();
             pointCount = 0;
             font = new System.Drawing.Font("Modern No 20", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             lin = new LinObolonka();
-            cooSystem = new CoordinateSystem(this, mainPanel, graphics);
-            radar = new Radar(mainPanel);
-            
-            mainPanelGraphics = mainPanel.CreateGraphics();
-
+            cooSystem = new CoordinateSystem(this, panel1);
         }
 
         /**Обновляємо дані
@@ -55,17 +45,18 @@ namespace LinearObolon
          * натискається клавіша "Refresh"
          * змінюються розміри форми
          * 
-         */
-        //private void refreshData()
-        //{
-        //    //pointCount = 0;
+         */ 
+        private void refreshData()
+        {
+            pointCount = 0;
+            graphics = panel1.CreateGraphics();
+            stdPoints.Items.Clear();
+            sortPoints.Items.Clear();
+            lin.Clear();
+            ClearPanel();
+            cooSystem.paintCoordinateSystem(panel1);
             
-        //    //stdPoints.Items.Clear();
-        //    //sortPoints.Items.Clear();
-        //    //lin.Clear();
-        //    //ClearPanel();
-        //    //cooSystem.paintCoordinateSystem(mainPanel);
-        //}
+        }
 
         /**Очистка всієї панелі
          * 
@@ -84,17 +75,15 @@ namespace LinearObolon
          */
         private void panel1_MouseClick(object sender, MouseEventArgs e)
         {
-            mainPanelGraphics.FillEllipse(Brushes.Red, e.X - 5, e.Y - 5, 10, 10);
+            graphics.FillEllipse(Brushes.Red, e.X - 5, e.Y - 5, 10, 10);
 
-            mainPanelGraphics.DrawString((++pointCount).ToString(), font, Brushes.Red, new Point(e.X - 5, e.Y + 20));
+            graphics.DrawString((++pointCount).ToString(), font, Brushes.Red, new Point(e.X - 5, e.Y + 20));
 
             PointF point = cooSystem.ToDecartCoordinates(e.X, e.Y);
 
             stdPoints.Items.Add(point.X.ToString() + " " + point.Y.ToString() + " " + pointCount);
 
             lin.AddPoint(point.X, point.Y);
-
-            Thread.Sleep(500);
         }
 
         /**Оболонка
@@ -104,6 +93,8 @@ namespace LinearObolon
         private void DrawMBO()
         {
             segments = new Dictionary<Point, Point>();
+            graphics.Clear(Color.DodgerBlue);
+            cooSystem.paintCoordinateSystem(panel1);
 
             for (int i = 0; i < lin.Count - 1; ++i)
             {
@@ -129,7 +120,7 @@ namespace LinearObolon
 
         private void RadarInitialize()
         {
-            radarForm = new RadarForm(mainPanel, this);
+            radarForm = new RadarForm(panel1, this);
             radarForm.Show();
         }
 
@@ -152,14 +143,14 @@ namespace LinearObolon
             else
             {
                 MessageBox.Show("There should be at least 3 points!");
-                //refreshData();
+                refreshData();
             }
         }
         private void paint_Click(object sender, EventArgs e)
         {
-            //refreshData();
-            //ClearPanel();
-            //cooSystem.paintCoordinateSystem(mainPanel);
+            refreshData();
+            ClearPanel();
+            cooSystem.paintCoordinateSystem(panel1);
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -172,30 +163,17 @@ namespace LinearObolon
             }
         }
 
-        //private void Form1_SizeChanged(object sender, EventArgs e)
-        //{
-        //    if (!isFirstInit)
-        //    {
-        //        refreshData(); 
-        //    }
-        //}
+        private void Form1_SizeChanged(object sender, EventArgs e)
+        {
+            if (!isFirstInit)
+            {
+                refreshData(); 
+            }
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-
-            DrawMBO();
-            cooSystem.paintCoordinateSystem(mainPanel, graphics);
-            sea.DrawSea(graphics);
-
-            for (int i = 0; i < 20; ++i)
-            {
-                radar.MoveArrow();
-                graphics.DrawLine(new Pen(Color.ForestGreen, 2), radar.XBegin, radar.YBegin, radar.XCoordinate, radar.YCoordinate);
-            }
-
-            mainPanelGraphics.DrawImage(bitmap, 0, 0);
-            sea.MoveShips();
-            ClearPanel();
+            
         }
 
         private void radarOn_Click(object sender, EventArgs e)
@@ -217,16 +195,6 @@ namespace LinearObolon
             timer1.Stop();
         }
 
-        public void EnableDoubleBuffering()
-        {
-            // Set the value of the double-buffering style bits to true.
-            this.SetStyle(ControlStyles.DoubleBuffer |
-               ControlStyles.UserPaint |
-               ControlStyles.AllPaintingInWmPaint,
-               true);
-            this.UpdateStyles();
-        }
-
         private void MainForm_LocationChanged(object sender, EventArgs e)
         {
             if (radarForm != null && radarState)
@@ -239,23 +207,6 @@ namespace LinearObolon
 
         #endregion
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            sea = new SeaMap(10, 10, 4, mainPanel);
-            timer1.Start();
-        }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            timer1.Stop();
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            bitmap = new Bitmap(mainPanel.Width, mainPanel.Height);
-            graphics = Graphics.FromImage(bitmap);
-        }
-
-       
     }
 }
