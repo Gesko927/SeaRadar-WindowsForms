@@ -17,7 +17,7 @@ namespace LinearObolon
         private float unitX;
         private float unitY;
 
-        private Graphics g;
+        private Graphics gr;
         private Pen p;
         private Font font;
         private MainForm mainForm;
@@ -73,10 +73,10 @@ namespace LinearObolon
             }
         }
 
-        public CoordinateSystem(MainForm mainForm, Panel panel)
+        public CoordinateSystem(MainForm mainForm, Panel panel, Graphics gr)
         {
             this.mainForm = mainForm;
-            g = panel.CreateGraphics();
+            this.gr = gr;
             font = new Font("Ariel", 15, FontStyle.Regular);
             scale = 10;
             intervalCount = 10;
@@ -103,10 +103,10 @@ namespace LinearObolon
         }
 
         #region Coordinate System
-        public void paintCoordinateSystem(Panel panel)
+        public void paintCoordinateSystem(Panel panel, Graphics gr)
         {
             p = new Pen(Color.Black, 3);
-            g = panel.CreateGraphics();
+            this.gr = gr;
 
             //Одиничні відрізки в пікселях
             unitX = (float)(panel.ClientSize.Width / (2 * intervalCount));
@@ -117,13 +117,12 @@ namespace LinearObolon
             beginY = panel.ClientSize.Height / 2;
 
             //Система координат
-            g.DrawLine(p, 0, beginY, panel.ClientSize.Width, beginY);
-            g.DrawLine(p, beginX, panel.ClientSize.Height, beginX, 0);
+            gr.DrawLine(p, 0, beginY, panel.ClientSize.Width, beginY);
+            gr.DrawLine(p, beginX, panel.ClientSize.Height, beginX, 0);
 
             paintScaleAxes(scale);
             paintAdditionalScale(scale, panel);
         }
-
 
         private void paintScaleAxes(int scale)
         {
@@ -138,9 +137,9 @@ namespace LinearObolon
             for (int i = 0; i < scale + 1; ++i)
             {
                 //Вісь Y, яка знаходить вище нуля
-                g.DrawLine(p, beginX - 10, beginY - (i * unitY), beginX + 10, beginY - (i * unitY));
+                gr.DrawLine(p, beginX - 10, beginY - (i * unitY), beginX + 10, beginY - (i * unitY));
 
-                g.DrawString((i*temp).ToString(), font, Brushes.Black,
+                gr.DrawString((i*temp).ToString(), font, Brushes.Black,
                                             new RectangleF(/*лівий верхній кут Х*/beginX + font.Size / 2,
                                                            /*лівий верхній кут Y*/beginY - (i * unitY),
                                                            /*правий нижній кут Х*/beginX,
@@ -150,9 +149,9 @@ namespace LinearObolon
             for (int i = 1; i < scale + 1; ++i)
             {
                 //Вісь Y, яка знаходить нижче нуля
-                g.DrawLine(p, beginX - 10, beginY + (i * unitY), beginX + 10, beginY + (i * unitY));
+                gr.DrawLine(p, beginX - 10, beginY + (i * unitY), beginX + 10, beginY + (i * unitY));
 
-                g.DrawString($"-{(i * temp).ToString()}", font, Brushes.Black,
+                gr.DrawString($"-{(i * temp).ToString()}", font, Brushes.Black,
                                             new RectangleF(/*лівий верхній кут Х*/beginX + font.Size / 2,
                                                            /*лівий верхній кут Y*/beginY + (i * unitY),
                                                            /*правий нижній кут Х*/beginX,
@@ -165,9 +164,9 @@ namespace LinearObolon
             for (int i = 1; i < scale + 1; ++i)
             {
                 //Вісь Х, що знаходить справа від нуля
-                g.DrawLine(p, beginX + (i * unitX), beginY + 10, beginX + (i * unitX), beginY - 10);
+                gr.DrawLine(p, beginX + (i * unitX), beginY + 10, beginX + (i * unitX), beginY - 10);
                 //табуляція по правій осі Х
-                g.DrawString((i * temp).ToString(), font, Brushes.Black,
+                gr.DrawString((i * temp).ToString(), font, Brushes.Black,
                                             new RectangleF(/*лівий верхній кут Х*/beginX + (i * unitX),
                                                            /*лівий верхній кут Y*/beginY + font.Size,
                                                            /*правий нижній кут Х*/beginX + (i * unitX),
@@ -177,9 +176,9 @@ namespace LinearObolon
             for (int i = 1; i < scale + 1; ++i)
             {
                 //Вісь Х, що знаходиться зліва від нуля
-                g.DrawLine(p, beginX - (i * unitX), beginY + 10, beginX - (i * unitX), beginY - 10);
+                gr.DrawLine(p, beginX - (i * unitX), beginY + 10, beginX - (i * unitX), beginY - 10);
                 //табуляція по правій осі Х
-                g.DrawString($"-{(i * temp).ToString()}", font, Brushes.Black,
+                gr.DrawString($"-{(i * temp).ToString()}", font, Brushes.Black,
                                             new RectangleF(/*лівий верхній кут Х*/beginX - (i * unitX),
                                                            /*лівий верхній кут Y*/beginY + font.Size,
                                                            /*правий нижній кут Х*/beginX + (i * unitX),
@@ -195,14 +194,14 @@ namespace LinearObolon
 
             for (int i = 0; i < scale + 1; ++i)
             {
-                g.DrawLine(p, 0, beginY + (i * unitY), panel.ClientSize.Width, beginY + (i * unitY));
-                g.DrawLine(p, 0, beginY - (i * unitY), panel.ClientSize.Width, beginY - (i * unitY));
+                gr.DrawLine(p, 0, beginY + (i * unitY), panel.ClientSize.Width, beginY + (i * unitY));
+                gr.DrawLine(p, 0, beginY - (i * unitY), panel.ClientSize.Width, beginY - (i * unitY));
             }
 
             for (int i = 1; i < scale + 1; ++i)
             {
-                g.DrawLine(p, beginX + (i * unitX), 0, beginX + (i * unitX), panel.ClientSize.Height);
-                g.DrawLine(p, beginX - (i * unitX), 0, beginX - (i * unitX), panel.ClientSize.Height);
+                gr.DrawLine(p, beginX + (i * unitX), 0, beginX + (i * unitX), panel.ClientSize.Height);
+                gr.DrawLine(p, beginX - (i * unitX), 0, beginX - (i * unitX), panel.ClientSize.Height);
             }
         }
 
