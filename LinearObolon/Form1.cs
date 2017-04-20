@@ -104,9 +104,6 @@ namespace LinearObolon
         private void DrawMBO()
         {
             segments = new Dictionary<Point, Point>();
-            //mainPanelGraphics.Clear(Color.DodgerBlue);
-            //cooSystem.paintCoordinateSystem(mainPanel, graphics);
-            
 
             for (int i = 0; i < lin.Count - 1; ++i)
             {
