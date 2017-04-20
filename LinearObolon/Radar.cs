@@ -12,14 +12,10 @@ namespace LinearObolon
     class Radar
     {
         private Panel panel;
-
         private int r;
-
         private int fiTick;
-
         private int xBegin;
         private int yBegin;
-
         private float xCoordinate;
         private float yCoordinate;
 

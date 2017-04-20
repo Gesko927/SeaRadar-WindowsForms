@@ -29,53 +29,53 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
+            this.mainPanel = new System.Windows.Forms.Panel();
+            this.rightPanel = new System.Windows.Forms.Panel();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.stdPoints = new System.Windows.Forms.ListBox();
             this.sortPoints = new System.Windows.Forms.ListBox();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.leftPanel = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.radarOff = new System.Windows.Forms.Button();
             this.radarOn = new System.Windows.Forms.Button();
             this.paintBtn = new System.Windows.Forms.Button();
             this.startBtn = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.panel3.SuspendLayout();
+            this.rightPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            this.panel2.SuspendLayout();
+            this.leftPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // mainPanel
             // 
-            this.panel1.BackColor = System.Drawing.Color.DodgerBlue;
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(136, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(949, 734);
-            this.panel1.TabIndex = 0;
-            this.panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseClick);
+            this.mainPanel.BackColor = System.Drawing.Color.DodgerBlue;
+            this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainPanel.Location = new System.Drawing.Point(102, 0);
+            this.mainPanel.Name = "mainPanel";
+            this.mainPanel.Size = new System.Drawing.Size(712, 596);
+            this.mainPanel.TabIndex = 0;
+            this.mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseClick);
             // 
-            // panel3
+            // rightPanel
             // 
-            this.panel3.BackColor = System.Drawing.Color.Transparent;
-            this.panel3.Controls.Add(this.trackBar1);
-            this.panel3.Controls.Add(this.stdPoints);
-            this.panel3.Controls.Add(this.sortPoints);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(1085, 0);
-            this.panel3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(228, 734);
-            this.panel3.TabIndex = 3;
+            this.rightPanel.BackColor = System.Drawing.Color.Transparent;
+            this.rightPanel.Controls.Add(this.trackBar1);
+            this.rightPanel.Controls.Add(this.stdPoints);
+            this.rightPanel.Controls.Add(this.sortPoints);
+            this.rightPanel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.rightPanel.Location = new System.Drawing.Point(814, 0);
+            this.rightPanel.Margin = new System.Windows.Forms.Padding(2);
+            this.rightPanel.Name = "rightPanel";
+            this.rightPanel.Size = new System.Drawing.Size(171, 596);
+            this.rightPanel.TabIndex = 3;
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(51, 663);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(4);
+            this.trackBar1.Location = new System.Drawing.Point(38, 539);
             this.trackBar1.Maximum = 9;
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(139, 56);
+            this.trackBar1.Size = new System.Drawing.Size(104, 56);
             this.trackBar1.TabIndex = 3;
             this.trackBar1.Value = 1;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
@@ -85,10 +85,9 @@
             this.stdPoints.Font = new System.Drawing.Font("Modern No. 20", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stdPoints.FormattingEnabled = true;
             this.stdPoints.ItemHeight = 21;
-            this.stdPoints.Location = new System.Drawing.Point(5, 149);
-            this.stdPoints.Margin = new System.Windows.Forms.Padding(4);
+            this.stdPoints.Location = new System.Drawing.Point(4, 121);
             this.stdPoints.Name = "stdPoints";
-            this.stdPoints.Size = new System.Drawing.Size(205, 172);
+            this.stdPoints.Size = new System.Drawing.Size(155, 109);
             this.stdPoints.TabIndex = 1;
             // 
             // sortPoints
@@ -96,32 +95,51 @@
             this.sortPoints.Font = new System.Drawing.Font("Modern No. 20", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sortPoints.FormattingEnabled = true;
             this.sortPoints.ItemHeight = 22;
-            this.sortPoints.Location = new System.Drawing.Point(4, 436);
-            this.sortPoints.Margin = new System.Windows.Forms.Padding(4);
+            this.sortPoints.Location = new System.Drawing.Point(3, 354);
             this.sortPoints.Name = "sortPoints";
-            this.sortPoints.Size = new System.Drawing.Size(207, 158);
+            this.sortPoints.Size = new System.Drawing.Size(156, 92);
             this.sortPoints.TabIndex = 2;
             // 
-            // panel2
+            // leftPanel
             // 
-            this.panel2.BackColor = System.Drawing.Color.Transparent;
-            this.panel2.Controls.Add(this.radarOff);
-            this.panel2.Controls.Add(this.radarOn);
-            this.panel2.Controls.Add(this.paintBtn);
-            this.panel2.Controls.Add(this.startBtn);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel2.Location = new System.Drawing.Point(0, 0);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(136, 734);
-            this.panel2.TabIndex = 0;
+            this.leftPanel.BackColor = System.Drawing.Color.Transparent;
+            this.leftPanel.Controls.Add(this.button2);
+            this.leftPanel.Controls.Add(this.button1);
+            this.leftPanel.Controls.Add(this.radarOff);
+            this.leftPanel.Controls.Add(this.radarOn);
+            this.leftPanel.Controls.Add(this.paintBtn);
+            this.leftPanel.Controls.Add(this.startBtn);
+            this.leftPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.leftPanel.Location = new System.Drawing.Point(0, 0);
+            this.leftPanel.Name = "leftPanel";
+            this.leftPanel.Size = new System.Drawing.Size(102, 596);
+            this.leftPanel.TabIndex = 0;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(12, 228);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 7;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 189);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // radarOff
             // 
-            this.radarOff.Location = new System.Drawing.Point(16, 128);
-            this.radarOff.Margin = new System.Windows.Forms.Padding(4);
+            this.radarOff.Location = new System.Drawing.Point(12, 104);
             this.radarOff.Name = "radarOff";
-            this.radarOff.Size = new System.Drawing.Size(100, 55);
+            this.radarOff.Size = new System.Drawing.Size(75, 45);
             this.radarOff.TabIndex = 6;
             this.radarOff.Text = "Stop Scanning";
             this.radarOff.UseVisualStyleBackColor = true;
@@ -129,10 +147,9 @@
             // 
             // radarOn
             // 
-            this.radarOn.Location = new System.Drawing.Point(16, 43);
-            this.radarOn.Margin = new System.Windows.Forms.Padding(4);
+            this.radarOn.Location = new System.Drawing.Point(12, 35);
             this.radarOn.Name = "radarOn";
-            this.radarOn.Size = new System.Drawing.Size(100, 56);
+            this.radarOn.Size = new System.Drawing.Size(75, 46);
             this.radarOn.TabIndex = 5;
             this.radarOn.Text = "Start Scanning";
             this.radarOn.UseVisualStyleBackColor = true;
@@ -141,10 +158,10 @@
             // paintBtn
             // 
             this.paintBtn.Font = new System.Drawing.Font("BERNIER Shade", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.paintBtn.Location = new System.Drawing.Point(4, 535);
-            this.paintBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.paintBtn.Location = new System.Drawing.Point(3, 435);
+            this.paintBtn.Margin = new System.Windows.Forms.Padding(2);
             this.paintBtn.Name = "paintBtn";
-            this.paintBtn.Size = new System.Drawing.Size(125, 86);
+            this.paintBtn.Size = new System.Drawing.Size(94, 70);
             this.paintBtn.TabIndex = 4;
             this.paintBtn.Text = "REFRESH";
             this.paintBtn.UseVisualStyleBackColor = true;
@@ -153,10 +170,9 @@
             // startBtn
             // 
             this.startBtn.Font = new System.Drawing.Font("BERNIER Shade", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.startBtn.Location = new System.Drawing.Point(7, 424);
-            this.startBtn.Margin = new System.Windows.Forms.Padding(4);
+            this.startBtn.Location = new System.Drawing.Point(5, 344);
             this.startBtn.Name = "startBtn";
-            this.startBtn.Size = new System.Drawing.Size(125, 89);
+            this.startBtn.Size = new System.Drawing.Size(94, 72);
             this.startBtn.TabIndex = 3;
             this.startBtn.Text = "Start";
             this.startBtn.UseVisualStyleBackColor = true;
@@ -164,28 +180,26 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 50;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1313, 734);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel2);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.ClientSize = new System.Drawing.Size(985, 596);
+            this.Controls.Add(this.mainPanel);
+            this.Controls.Add(this.rightPanel);
+            this.Controls.Add(this.leftPanel);
+            this.DoubleBuffered = true;
             this.Name = "MainForm";
             this.Text = "Linear MBO";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.LocationChanged += new System.EventHandler(this.MainForm_LocationChanged);
-            this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.rightPanel.ResumeLayout(false);
+            this.rightPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            this.panel2.ResumeLayout(false);
+            this.leftPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -193,17 +207,19 @@
         #endregion
 
         //private ExtendedPanel radarPanel;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel mainPanel;
+        private System.Windows.Forms.Panel leftPanel;
         private System.Windows.Forms.ListBox stdPoints;
         private System.Windows.Forms.ListBox sortPoints;
         private System.Windows.Forms.Button startBtn;
         private System.Windows.Forms.Button paintBtn;
-        public System.Windows.Forms.Panel panel3;
+        public System.Windows.Forms.Panel rightPanel;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button radarOff;
         private System.Windows.Forms.Button radarOn;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 

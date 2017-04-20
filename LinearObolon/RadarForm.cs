@@ -35,8 +35,10 @@ namespace LinearObolon
             panel1.Location = panel.Location;
             panel1.Size = panel.ClientSize;
 
+
             radar = new Radar(panel1);
-            graphics = panel1.CreateGraphics();
+
+            graphics = panel.CreateGraphics();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -48,6 +50,7 @@ namespace LinearObolon
                 radar.MoveArrow();
                 graphics.DrawLine(new Pen(Color.ForestGreen, 2), radar.XBegin, radar.YBegin, radar.XCoordinate, radar.YCoordinate);
             }
+
         }
 
         public void StartTimer()

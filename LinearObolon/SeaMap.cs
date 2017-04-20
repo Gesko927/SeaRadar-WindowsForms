@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
+using System.IO;
+using System.Threading;
 
 namespace LinearObolon
 {
-    class SeaMap
+    class SeaMap : ISeaDrawable
     {
         private Random random;
 
@@ -21,6 +24,8 @@ namespace LinearObolon
 
         private Ship[] ships;
 
+        private Panel panel;
+
         public SeaMap()
         {
             width = 10;
@@ -32,19 +37,25 @@ namespace LinearObolon
 
             ships = new Ship[amountOfShips];
 
-            for(int i = 0; i < amountOfShips; ++i)
+            for (int i = 0; i < amountOfShips; ++i)
             {
-                ships[i] = new Ship();
+                ships[i] = CreateShip();
             }
 
             Sea = new int[width, height];
 
+
+
         }
 
-        public SeaMap(int width, int height, int shipsAmount)
+        public SeaMap(int width, int height, int shipsAmount, Panel panel)
         {
+            this.panel = panel;
+
             this.width = width;
             this.height = height;
+
+            Sea = new int[width, height];
 
             ships = new Ship[shipsAmount];
 
@@ -52,19 +63,34 @@ namespace LinearObolon
 
             for (int i = 0; i < shipsAmount; ++i)
             {
-                ships[i] = new Ship();
+                ships[i] = CreateShip();
             }
-
-            Sea = new int[width, height];
         }
-        
+
         private Ship CreateShip()
         {
-            int startSide = random.Next(1,4);
+            int startSide = random.Next(1, 4);
             int exitSide = 0;
 
-            Point enterPoint = new Point();
-            Point exitPoint = new Point();
+            Point enterPoint = initPoint(startSide, 0);
+
+            while (true)
+            {
+                exitSide = random.Next(1, 4);
+
+                if (exitSide != startSide)
+                { break; }
+            }
+
+            Point exitPoint = initPoint(exitSide, 1);
+
+            return (new Ship(enterPoint, exitPoint, width, new Point(panel.Width / width, panel.Height / height)));//Visual Ship
+        }
+
+        //Done
+        private Point initPoint(int side, int count)
+        {
+            Point point = new Point();
 
             /**Sides
              *       1
@@ -77,65 +103,124 @@ namespace LinearObolon
              *       3
              * 
              */
-            switch (startSide)
+            switch (side)
             {
                 case 1:
                     {
-                        enterPoint.Y = 0;
-                        enterPoint.X = random.Next(0, width - 1);
-                    } break;
-                case 2:
-                    {
-                        enterPoint.Y = random.Next(0, height - 1);
-                        enterPoint.X = width - 1;
-                    } break;
-                case 3:
-                    {
-                        enterPoint.Y = height - 1;
-                        enterPoint.X = random.Next(0, width - 1);
-                    } break;
-                case 4:
-                    {
-                        enterPoint.Y = random.Next(0, height - 1);
-                        enterPoint.X = 0;
-                    } break;
-            }
-            
-            while(true)
-            {
-                exitSide = random.Next(1, 4);
-
-                if(exitSide != startSide)
-                { break; }
-            }
-
-            switch (exitSide)
-            {
-                case 1:
-                    {
-                        exitPoint.Y = 0;
-                        exitPoint.X = random.Next(1, width - 1);
+                        do
+                        {
+                            point.Y = random.Next(count, width - 1);
+                            point.X = 0;
+                        } while (!IsCorrectEntryPoint(point.X, point.Y));
                     }
                     break;
                 case 2:
                     {
-                        exitPoint.Y = random.Next(1, height - 1);
-                        exitPoint.X = width - 1;
-                    } break;
+                        do
+                        {
+                            point.Y = width - 1;
+                            point.X = random.Next(count, height - 1);
+                        } while (!IsCorrectEntryPoint(point.X, point.Y));
+                    }
+                    break;
                 case 3:
                     {
-                        exitPoint.Y = height - 1;
-                        exitPoint.X = random.Next(1, width - 1);
-                    } break;
+                        do
+                        {
+                            point.Y = random.Next(count, width - 1);
+                            point.X = height - 1;
+                        } while (!IsCorrectEntryPoint(point.X, point.Y));
+                    }
+                    break;
                 case 4:
                     {
-                        exitPoint.Y = random.Next(0, height - 1);
-                        exitPoint.X = 0;
-                    } break;
+                        do
+                        {
+                            point.Y = 0;
+                            point.X = random.Next(count, height - 1);
+                        } while (!IsCorrectEntryPoint(point.X, point.Y));
+                    }
+                    break;
             }
 
-            return (new Ship(enterPoint, exitPoint));
+            return (point);
+        }
 
+        //Done
+        private bool IsCorrectEntryPoint(int x, int y)
+        {
+            bool result = false;
+
+            if(Sea[x,y] == 0)
+            {
+                result = true;
+            }
+
+            return result; 
+        }
+
+        private bool IsOutOfSeaRange(int x, int y)
+        {
+            bool result = false;
+
+            if ((x < 0 || x > panel.Width - 1) || (y < 0 || y > panel.Height - 1))
+            {
+                result = true;
+            }
+
+            return result;
+        }
+
+        //Done
+        public void MoveShips()
+        {
+            foreach(Ship ship in ships)
+            {
+                ship.MoveShip();
+            }
+        }
+        
+        public void DrawSea(Graphics graphics)
+        {
+            for(int i = 0; i < ships.Length; ++i)
+            {
+                if (IsOutOfSeaRange((int)ships[i].Position.X, (int)ships[i].Position.Y))
+                {
+                    ships[i] = null;
+                    ships[i] = CreateShip();
+                }
+                graphics.DrawImage(Image.FromFile(@"C:\Users\Gesko927\OneDrive\Visual Projects\Ball\Ball\bin\Debug\Ship.png"), ships[i].Position.X, ships[i].Position.Y);
+            }
+        }
+
+        //Done
+        public void PrintSeaInFile(string fileName)
+        {
+            StreamWriter sw = null;
+
+            try
+            {
+               sw  = new StreamWriter(fileName);
+                
+                for (int i = 0; i < width; ++i)
+                {
+                    for (int j = 0; j < height; ++j)
+                    {
+                        sw.Write(Sea[i, j]);
+                        sw.Write(" ");
+                    }
+                    sw.WriteLine();
+                }
+
+                sw.WriteLine();
+            }
+            catch(FileNotFoundException e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            finally
+            { sw.Close(); }
+            
         }
     }
 }

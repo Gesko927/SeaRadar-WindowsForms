@@ -11,13 +11,23 @@ namespace LinearObolon
 {
     class Ship
     {
-        private Point position;
+        private PointF position;
         private Point direction;
 
-        private Point ort;
+        private PointF ort;
 
         private Point enter;
         private Point exit;
+
+        private Point scale;
+
+        public PointF Position
+        {
+            get
+            {
+                return position;
+            }
+        }
 
         public Ship()
         {
@@ -37,19 +47,47 @@ namespace LinearObolon
             exit.Y = 0;
         }
 
-        public Ship(Point enter, Point exit)
+        public Ship(Point enter, Point exit, int size, Point scale)
         {
-            this.position = enter;
+            this.scale = scale;
+
+            if(enter.X == 0)
+            {
+                this.position.X = 0;
+            }
+            else if(enter.X > 0 && enter.X < size - 1)
+            {
+                this.position.X = (enter.X) * scale.X;
+            }
+            else
+            {
+                this.position.X = (enter.X+1) * scale.X;
+            }
+
+            if (enter.Y == 0)
+            {
+                this.position.Y = 0;
+            }
+            else if (enter.Y > 0 && enter.Y < size - 1)
+            {
+                this.position.Y = (enter.Y) * scale.Y;
+            }
+            else
+            {
+                this.position.Y = (enter.Y - 1) * scale.Y;
+            }
+
+
             this.enter = enter;
             this.exit = exit;
 
-            ortDefinition();
+            ortDefinition(size);
 
             direction.X = (enter.X < exit.X) ? 1 : ((enter.X > exit.X) ? -1 : 0);//1 right, -1 left
             direction.Y = (enter.Y < exit.Y) ? 1 : ((enter.Y > exit.Y) ? -1 : 0);//1 down, -1 up
         }
 
-        private void ortDefinition()
+        private void ortDefinition(int size)
         {
             double k = 0;
 
@@ -67,7 +105,13 @@ namespace LinearObolon
             }
 
             ort.X = 1;
-            ort.Y = Convert.ToInt32(Math.Round(k * ort.X, 0, MidpointRounding.AwayFromZero));
+            ort.Y = (float)(k * ort.X);
+        }
+
+        public void MoveShip()
+        {
+            position.X += (direction.X == 1) ? ort.X * scale.X : ((direction.X == -1) ? - ort.X * scale.X : 0);
+            position.Y += (direction.Y == 1) ? ort.Y * scale.Y : ((direction.Y == -1) ? - ort.Y * scale.Y : 0);
         }
 
     }
