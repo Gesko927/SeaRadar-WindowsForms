@@ -6,22 +6,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Diagnostics;
 
-namespace LinearObolon
+namespace ConvexHullScanning
 {
     class Ship
     {
-        private PointF position;
+        private Point position;
         private Point direction;
-
-        private PointF ort;
-
         private Point enter;
         private Point exit;
-
         private Point scale;
+        private PointF ort;
 
-        public PointF Position
+        public Stopwatch shipTimer = new Stopwatch();
+
+        public Point Position
         {
             get
             {
@@ -51,17 +51,17 @@ namespace LinearObolon
         {
             this.scale = scale;
 
-            if(enter.X == 0)
+            if (enter.X == 0)
             {
                 this.position.X = 0;
             }
-            else if(enter.X > 0 && enter.X < size - 1)
+            else if (enter.X > 0 && enter.X < size - 1)
             {
                 this.position.X = (enter.X) * scale.X;
             }
             else
             {
-                this.position.X = (enter.X+1) * scale.X;
+                this.position.X = (enter.X + 1) * scale.X;
             }
 
             if (enter.Y == 0)
@@ -93,7 +93,7 @@ namespace LinearObolon
 
             try
             {
-               k  = (double)(exit.Y - enter.Y) / (exit.X - enter.X);
+                k = (double)(exit.Y - enter.Y) / (exit.X - enter.X);
             }
             catch (DivideByZeroException e)
             {
@@ -110,8 +110,8 @@ namespace LinearObolon
 
         public void MoveShip()
         {
-            position.X += (direction.X == 1) ? ort.X * scale.X : ((direction.X == -1) ? - ort.X * scale.X : 0);
-            position.Y += (direction.Y == 1) ? ort.Y * scale.Y : ((direction.Y == -1) ? - ort.Y * scale.Y : 0);
+            position.X += (int)((direction.X == 1) ? ort.X * scale.X : ((direction.X == -1) ? -ort.X * scale.X : 0));
+            position.Y += (int)((direction.Y == 1) ? ort.Y * scale.Y : ((direction.Y == -1) ? -ort.Y * scale.Y : 0));
         }
 
     }
