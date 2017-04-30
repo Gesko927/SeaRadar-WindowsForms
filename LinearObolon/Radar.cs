@@ -7,12 +7,10 @@ using System.Drawing.Drawing2D;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace LinearObolon
+namespace ConvexHullScanning
 {
     class Radar
     {
-        private Panel panel;
-
         private int r;
 
         private int fiTick;
@@ -55,18 +53,26 @@ namespace LinearObolon
             }
         }
 
-        public Radar(Panel panel)
+        /// <summary>
+        /// Creates a radar centered with X and Y coordinates
+        /// </summary>
+        /// <param name="xCenter">Center X coordinate</param>
+        /// <param name="yCenter">Center Y coordinate</param>
+        /// <param name="arrowSize">Size of radar`s arrow in px</param>
+        public Radar(int xCenter, int yCenter, int arrowSize)
         {
-            this.panel = panel;
 
-            r = Math.Max(panel.ClientSize.Width, panel.ClientSize.Height);
+            r = arrowSize;
 
-            xBegin = panel.ClientSize.Width / 2;
-            yBegin = panel.ClientSize.Height / 2;
+            xBegin = xCenter;
+            yBegin = yCenter;
 
             fiTick = -90;
         }
 
+        /// <summary>
+        /// Method which moves radar`s arrows
+        /// </summary>
         public void MoveArrow()
         {
             fiTick += 1;

@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LinearObolon
+namespace ConvexHullScanning
 {
     public interface ISeaDrawable
     {
-        void DrawSea(Graphics graphics);
+        void DrawShips(Graphics graphics);
     }
 }

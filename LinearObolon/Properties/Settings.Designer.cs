@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LinearObolon.Properties
+namespace ConvexHullScanning.Properties
 {
 
 
