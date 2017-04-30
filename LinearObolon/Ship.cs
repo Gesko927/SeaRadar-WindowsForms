@@ -45,23 +45,23 @@ namespace ConvexHullScanning
 
             exit.X = 0;
             exit.Y = 0;
-         }
+        }
 
         public Ship(Point enter, Point exit, int size, Point scale)
         {
             this.scale = scale;
 
-            if(enter.X == 0)
+            if (enter.X == 0)
             {
                 this.position.X = 0;
             }
-            else if(enter.X > 0 && enter.X < size - 1)
+            else if (enter.X > 0 && enter.X < size - 1)
             {
                 this.position.X = (enter.X) * scale.X;
             }
             else
             {
-                this.position.X = (enter.X+1) * scale.X;
+                this.position.X = (enter.X + 1) * scale.X;
             }
 
             if (enter.Y == 0)
@@ -93,7 +93,7 @@ namespace ConvexHullScanning
 
             try
             {
-               k  = (double)(exit.Y - enter.Y) / (exit.X - enter.X);
+                k = (double)(exit.Y - enter.Y) / (exit.X - enter.X);
             }
             catch (DivideByZeroException e)
             {
@@ -110,8 +110,8 @@ namespace ConvexHullScanning
 
         public void MoveShip()
         {
-            position.X += (int)((direction.X == 1) ? ort.X * scale.X : ((direction.X == -1) ? - ort.X * scale.X : 0));
-            position.Y += (int)((direction.Y == 1) ? ort.Y * scale.Y : ((direction.Y == -1) ? - ort.Y * scale.Y : 0));
+            position.X += (int)((direction.X == 1) ? ort.X * scale.X : ((direction.X == -1) ? -ort.X * scale.X : 0));
+            position.Y += (int)((direction.Y == 1) ? ort.Y * scale.Y : ((direction.Y == -1) ? -ort.Y * scale.Y : 0));
         }
 
     }
