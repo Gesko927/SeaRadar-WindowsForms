@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 
-namespace LinearObolon
+namespace ConvexHullScanning
 {
     class SeaMap : ISeaDrawable
     {
@@ -25,6 +25,14 @@ namespace LinearObolon
         private Ship[] ships;
 
         private Panel panel;
+
+        internal Ship[] Ships
+        {
+            get
+            {
+                return ships;
+            }
+        }
 
         public SeaMap()
         {
@@ -43,8 +51,6 @@ namespace LinearObolon
             }
 
             Sea = new int[width, height];
-
-
 
         }
 
@@ -67,6 +73,10 @@ namespace LinearObolon
             }
         }
 
+        /// <summary>
+        /// Method for creating new ship
+        /// </summary>
+        /// <returns>Return </returns>
         private Ship CreateShip()
         {
             int startSide = random.Next(1, 4);
@@ -87,7 +97,12 @@ namespace LinearObolon
             return (new Ship(enterPoint, exitPoint, width, new Point(panel.Width / width, panel.Height / height)));//Visual Ship
         }
 
-        //Done
+        /// <summary>
+        /// Method for initialisation entry and exit point
+        /// </summary>
+        /// <param name="side">Side on matrix</param>
+        /// <param name="count">0 - entry point, 1 - exit point</param>
+        /// <returns>Return point on matrix</returns>
         private Point initPoint(int side, int count)
         {
             Point point = new Point();
@@ -146,7 +161,12 @@ namespace LinearObolon
             return (point);
         }
 
-        //Done
+        /// <summary>
+        /// Method for validation correct ship`s entry point
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         private bool IsCorrectEntryPoint(int x, int y)
         {
             bool result = false;
@@ -159,11 +179,17 @@ namespace LinearObolon
             return result; 
         }
 
+        /// <summary>
+        /// Method for validation move beyond the sea
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         private bool IsOutOfSeaRange(int x, int y)
         {
             bool result = false;
 
-            if ((x < 0 || x > panel.Width - 1) || (y < 0 || y > panel.Height - 1))
+            if ((x < -25 || x > panel.Width + 50) || (y < -25 || y > panel.Height + 50))
             {
                 result = true;
             }
@@ -171,7 +197,9 @@ namespace LinearObolon
             return result;
         }
 
-        //Done
+        /// <summary>
+        /// Method which moves all ships.
+        /// </summary>
         public void MoveShips()
         {
             foreach(Ship ship in ships)
@@ -180,7 +208,11 @@ namespace LinearObolon
             }
         }
         
-        public void DrawSea(Graphics graphics)
+        /// <summary>
+        /// Method which draws all ships on selected control with graphics
+        /// </summary>
+        /// <param name="graphics">Control`s graphics</param>
+        public void DrawShips(Graphics graphics)
         {
             for(int i = 0; i < ships.Length; ++i)
             {
@@ -191,36 +223,6 @@ namespace LinearObolon
                 }
                 graphics.DrawImage(Image.FromFile(@"C:\Users\Gesko927\OneDrive\Visual Projects\Ball\Ball\bin\Debug\Ship.png"), ships[i].Position.X, ships[i].Position.Y);
             }
-        }
-
-        //Done
-        public void PrintSeaInFile(string fileName)
-        {
-            StreamWriter sw = null;
-
-            try
-            {
-               sw  = new StreamWriter(fileName);
-                
-                for (int i = 0; i < width; ++i)
-                {
-                    for (int j = 0; j < height; ++j)
-                    {
-                        sw.Write(Sea[i, j]);
-                        sw.Write(" ");
-                    }
-                    sw.WriteLine();
-                }
-
-                sw.WriteLine();
-            }
-            catch(FileNotFoundException e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-            finally
-            { sw.Close(); }
-            
         }
     }
 }

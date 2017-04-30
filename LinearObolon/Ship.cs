@@ -6,22 +6,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Diagnostics;
 
-namespace LinearObolon
+namespace ConvexHullScanning
 {
     class Ship
     {
-        private PointF position;
+        private Point position;
         private Point direction;
-
-        private PointF ort;
-
         private Point enter;
         private Point exit;
-
         private Point scale;
+        private PointF ort;
 
-        public PointF Position
+        public Stopwatch shipTimer = new Stopwatch();
+
+        public Point Position
         {
             get
             {
@@ -45,7 +45,7 @@ namespace LinearObolon
 
             exit.X = 0;
             exit.Y = 0;
-        }
+         }
 
         public Ship(Point enter, Point exit, int size, Point scale)
         {
@@ -110,8 +110,8 @@ namespace LinearObolon
 
         public void MoveShip()
         {
-            position.X += (direction.X == 1) ? ort.X * scale.X : ((direction.X == -1) ? - ort.X * scale.X : 0);
-            position.Y += (direction.Y == 1) ? ort.Y * scale.Y : ((direction.Y == -1) ? - ort.Y * scale.Y : 0);
+            position.X += (int)((direction.X == 1) ? ort.X * scale.X : ((direction.X == -1) ? - ort.X * scale.X : 0));
+            position.Y += (int)((direction.Y == 1) ? ort.Y * scale.Y : ((direction.Y == -1) ? - ort.Y * scale.Y : 0));
         }
 
     }
