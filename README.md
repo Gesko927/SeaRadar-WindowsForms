@@ -5,11 +5,11 @@ The program that simulates a marine radar
 2) Simulates the motion of the ship
 3) Checks whether ships crossed the hull
 4) Writes data crossing into file "log.txt"(In future, in database)
-
+---
 For correct start you also need:
-1) To install NuGet package "MetroModernUI"
-2) BunifuUI Framework - https://devtools.bunifu.co.ke/ 7 Day Trial
-
+1) To install NuGet package: "MetroModernUI"
+2) [Bunifu Framework](https://devtools.bunifu.co.ke/): 7 Day Trial
+---
 Start sequence:
 1) Press refresh button (lower left corner)
 2) Choose points on main control, coordinate system, by mouse click
