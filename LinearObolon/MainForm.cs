@@ -1,127 +1,127 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ConvexHullScanning
+namespace ConvexHullScan
 {
     public partial class MainForm : Form
     {
-        private List<Point> points;
-        private Dictionary<Point, Point> segments;
+        #region Private Fields
+        private readonly ConvexHull _convexHull;
+        private readonly CoordinateSystem _cooSystem;
+        
+        private readonly Font _font;
 
-        private Graphics graphics;
-        private Graphics doubleBuffer;
-        private Bitmap bitmap;
+        private Bitmap _bitmap;
+        private Graphics _doubleBuffer;
+        private Graphics _contolGraphics;
 
-        private int pointCount;
-        private Font font;
-        private ConvexHull convexHull;
-        private CoordinateSystem cooSystem;
-        private SeaMap sea;
-        private Radar radar;
+        private readonly bool _isFirstInit;
 
-        bool isFirstInit;
-        bool radarState;
+        private readonly Dictionary<Point, Point> _pointSegments;
+        private int _pointAmount;
+
+        private Radar _radar;
+        private bool _radarState;
+        private SeaMap _sea;
+        #endregion
 
         public MainForm()
         {
-            isFirstInit = false;
+            _isFirstInit = false;
             InitializeComponent();
-            isFirstInit = true;
-            pointCount = 0;
-            points = new List<Point>();
-            bitmap = new Bitmap(mainPanel.Width, mainPanel.Height);
-            graphics = mainPanel.CreateGraphics();
-            doubleBuffer = Graphics.FromImage(bitmap);
-            font = new System.Drawing.Font("Modern No 20", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            convexHull = new ConvexHull();
-            cooSystem = new CoordinateSystem();
-            segments = new Dictionary<Point, Point>();
+            _isFirstInit = true;
+            _pointAmount = 0;
+            _bitmap = new Bitmap(mainPanel.Width, mainPanel.Height);
+            _contolGraphics = mainPanel.CreateGraphics();
+            _doubleBuffer = Graphics.FromImage(_bitmap);
+            _font = new Font("Modern No 20", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            _convexHull = new ConvexHull();
+            _cooSystem = new CoordinateSystem();
+            _pointSegments = new Dictionary<Point, Point>();
         }
 
         /// <summary>
-        /// Refresh all data
+        ///     Refresh all data
         /// </summary>
         private void RefreshData()
         {
-            pointCount = 0;
+            _pointAmount = 0;
             stdPoints.Items.Clear();
             sortPoints.Items.Clear();
-            convexHull.Clear();
-            segments.Clear();
-            DrawConvexHullAndCoordinateSystem(doubleBuffer);
-            graphics.DrawImage(bitmap, 0, 0);
+            _convexHull.Clear();
+            _pointSegments.Clear();
+            DrawConvexHullAndCoordinateSystem(_doubleBuffer);
+            _contolGraphics.DrawImage(_bitmap, 0, 0);
         }
 
         /// <summary>
-        /// Show selected points on control
+        ///     Show selected points on control
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void mainPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            doubleBuffer.FillEllipse(Brushes.Red, e.X - 5, e.Y - 5, 10, 10);
+            _doubleBuffer.FillEllipse(Brushes.Red, e.X - 5, e.Y - 5, 10, 10);
 
-            doubleBuffer.DrawString((++pointCount).ToString(), font, Brushes.Red, new Point(e.X - 5, e.Y + 20));
+            _doubleBuffer.DrawString((++_pointAmount).ToString(), _font, Brushes.Red, new Point(e.X - 5, e.Y + 20));
 
-            PointF point = cooSystem.ConvertToDecartCoordinates(new Point(e.X, e.Y));
+            var point = _cooSystem.ConvertToDecartCoordinates(new Point(e.X, e.Y));
 
-            stdPoints.Items.Add(point.X.ToString() + " " + point.Y.ToString() + " " + pointCount);
+            stdPoints.Items.Add(point.X + " " + point.Y + " " + _pointAmount);
 
-            convexHull.AddPoint(point.X, point.Y);
+            _convexHull.AddPoint(point.X, point.Y);
 
-            graphics.DrawImage(bitmap, 0, 0);
+            _contolGraphics.DrawImage(_bitmap, 0, 0);
         }
 
         /// <summary>
-        /// Method which draws Convex Hull on control with graphics
+        ///     Method which draws Convex Hull on control with graphics
         /// </summary>
         /// <param name="graphics">Contol`s graphics</param>
-        private void DrawMBOLines(Graphics graphics)
+        private void DrawHullLines(Graphics graphics)
         {
-            for (int i = 0; i < convexHull.Count - 1; ++i)
+            if (graphics == null) throw new ArgumentNullException(nameof(graphics));
+
+            for (var i = 0; i < _convexHull.Count - 1; ++i)
             {
-                Point temp = cooSystem.ConvertToStandartCoordinates(convexHull[i]);
+                var temp = _cooSystem.ConvertToStandartCoordinates(_convexHull[i]);
                 graphics.FillEllipse(Brushes.Red, new Rectangle(new Point(temp.X - 5, temp.Y - 5), new Size(10, 10)));
-                graphics.DrawLine(new Pen(Color.Red, 2), temp, cooSystem.ConvertToStandartCoordinates(convexHull[i + 1]));
+                graphics.DrawLine(new Pen(Color.Red, 2), temp,
+                    _cooSystem.ConvertToStandartCoordinates(_convexHull[i + 1]));
             }
         }
 
         /// <summary>
-        /// Method which creates Convex Hull from selected points on control
+        ///     Method which creates Convex Hull from selected points on control
         /// </summary>
-        private void DrawMBO()
+        private void DrawHull()
         {
-            DrawMBOLines(doubleBuffer);
+            DrawHullLines(_doubleBuffer);
 
             sortPoints.Items.Clear();
             stdPoints.Items.Clear();
 
-            for (int i = 0; i < convexHull.Count; ++i)
+            for (var i = 0; i < _convexHull.Count; ++i)
             {
-                sortPoints.Items.Add(cooSystem.ConvertToStandartCoordinates(convexHull[i]));
-                stdPoints.Items.Add(convexHull[i].X + " " + convexHull[i].Y);
+                sortPoints.Items.Add(_cooSystem.ConvertToStandartCoordinates(_convexHull[i]));
+                stdPoints.Items.Add(_convexHull[i].X + " " + _convexHull[i].Y);
             }
 
-            for(int i = 0; i < convexHull.Count - 1; ++i)
-            {
-                segments.Add(cooSystem.ConvertToStandartCoordinates(convexHull[i]), cooSystem.ConvertToStandartCoordinates(convexHull[i+1]));
-            }
+            for (var i = 0; i < _convexHull.Count - 1; ++i)
+                _pointSegments.Add(_cooSystem.ConvertToStandartCoordinates(_convexHull[i]),
+                    _cooSystem.ConvertToStandartCoordinates(_convexHull[i + 1]));
         }
 
         /// <summary>
-        /// Method for writing message into a file
+        ///     Method for writing message into a file
         /// </summary>
         /// <param name="fileName">File name for writing message</param>
         /// <param name="message">Message for writing</param>
-        public void PrintInfoInFile(string fileName, string message)
+        private static void PrintInfoInFile(string fileName, string message)
         {
             StreamWriter sw = null;
 
@@ -130,138 +130,133 @@ namespace ConvexHullScanning
                 sw = new StreamWriter(fileName, true);
 
                 sw.WriteLine(message);
-
             }
             catch (FileNotFoundException e)
             {
                 MessageBox.Show(e.ToString());
             }
             finally
-            { sw.Close(); }
-
+            {
+                sw?.Close();
+            }
         }
 
         /// <summary>
-        /// Draws ConvexHull and Coordinate System on selected control with graphics
+        ///     Draws ConvexHull and Coordinate System on selected control with graphics
         /// </summary>
         /// <param name="graphics">Control`s graphics</param>
         private void DrawConvexHullAndCoordinateSystem(Graphics graphics)
         {
+            if (graphics == null) throw new ArgumentNullException(nameof(graphics));
+
             graphics.Clear(Color.DodgerBlue);
-            cooSystem.paintCoordinateSystem(mainPanel.ClientSize.Width, mainPanel.ClientSize.Height, graphics, new Pen(Color.Black, 3));
-            DrawMBOLines(graphics);
+            _cooSystem.PaintCoordinateSystem(mainPanel.ClientSize.Width, mainPanel.ClientSize.Height, graphics,
+                new Pen(Color.Black, 3));
+            DrawHullLines(graphics);
         }
 
         /// <summary>
-        /// Check whether the ship crossed Convex Hull
+        ///     Check whether the ship crossed Convex Hull
         /// </summary>
         private void CheckShips()
         {
-            bool leftIntersect = false;
-            bool rightIntersect = false;
+            var leftIntersect = false;
+            var rightIntersect = false;
 
-            
-            for (int i = 0; i < sea.Ships.Length; ++i)
+
+            for (var i = 0; i < _sea.Ships.Length; ++i)
             {
-                foreach (KeyValuePair<Point, Point> point in segments)
+                if (_pointSegments.Any(point => VectorIntersection.RayIntersectionLeft(point.Key, point.Value, _sea.Ships[i].Position)))
                 {
-                    if (VectorIntersection.RayIntersectionLeft(point.Key, point.Value ,  sea.Ships[i].Position))
-                    {
-                        leftIntersect = true;
-                        break;
-                    }
+                    leftIntersect = true;
                 }
 
 
-                foreach (KeyValuePair<Point, Point> point in segments)
+                if (_pointSegments.Any(point => VectorIntersection.RayIntersectionRight(point.Key, point.Value, _sea.Ships[i].Position)))
                 {
-                    if (VectorIntersection.RayIntersectionRight(point.Key, point.Value, sea.Ships[i].Position))
-                    {
-                        rightIntersect = true;
-                        break;
-                    }
+                    rightIntersect = true;
                 }
 
                 if (leftIntersect && rightIntersect)
                 {
-                    if(!sea.Ships[i].shipTimer.IsRunning)
+                    if (!_sea.Ships[i].ShipTimer.IsRunning)
                     {
-                        sea.Ships[i].shipTimer.Start();
+                        _sea.Ships[i].ShipTimer.Start();
 
-                        PrintInfoInFile("log.txt","Ship [" + (i + 1) + "] entered at: " + DateTime.Now.ToLongTimeString() + ".\n");
+                        PrintInfoInFile("log.txt",
+                            "Ship [" + (i + 1) + "] entered at: " + DateTime.Now.ToLongTimeString() + ".\n");
                     }
                 }
                 else
                 {
-                    if (sea.Ships[i].shipTimer.IsRunning)
+                    if (_sea.Ships[i].ShipTimer.IsRunning)
                     {
-                        sea.Ships[i].shipTimer.Stop();
+                        _sea.Ships[i].ShipTimer.Stop();
 
-                        TimeSpan ts = sea.Ships[i].shipTimer.Elapsed;
+                        var ts = _sea.Ships[i].ShipTimer.Elapsed;
 
-                        PrintInfoInFile("log.txt", "Ship [" + (i + 1) + "] out at: " + DateTime.Now.ToLongTimeString() + ".\n");
-                        PrintInfoInFile("log.txt", "Ship [" + (i + 1) + "] was " + ts.ToString() + ".\n");
-                    }                    
+                        PrintInfoInFile("log.txt",
+                            "Ship [" + (i + 1) + "] out at: " + DateTime.Now.ToLongTimeString() + ".\n");
+                        PrintInfoInFile("log.txt", "Ship [" + (i + 1) + "] was " + ts + ".\n");
+                    }
                 }
 
                 leftIntersect = false;
                 rightIntersect = false;
             }
-           
         }
 
         #region Events
 
         private void mainTrackBar_Scroll(object sender, EventArgs e)
         {
-            cooSystem.Scale = 10;
+            _cooSystem.Scale = 10;
 
-            for(int i = 0; i < (sender as TrackBar).Value; ++i)
-            {
-                cooSystem.Scale += 10;
-            }
+            for (var i = 0; i < ((TrackBar)sender).Value; ++i)
+                _cooSystem.Scale += 10;
         }
 
         private void Form1_SizeChanged(object sender, EventArgs e)
         {
-            if (isFirstInit)
+            if (_isFirstInit)
             {
-                bitmap = new Bitmap(bitmap, new Size(mainPanel.Width, mainPanel.Height));
+                _bitmap = new Bitmap(_bitmap, new Size(mainPanel.Width, mainPanel.Height));
 
-                doubleBuffer = Graphics.FromImage(bitmap);
+                _doubleBuffer = Graphics.FromImage(_bitmap);
 
-                graphics = mainPanel.CreateGraphics();
+                _contolGraphics = mainPanel.CreateGraphics();
 
-                int arrowSize = Math.Max(mainPanel.ClientSize.Width, mainPanel.ClientSize.Height);
+                var arrowSize = Math.Max(mainPanel.ClientSize.Width, mainPanel.ClientSize.Height);
 
-                radar = new Radar(mainPanel.ClientSize.Width / 2, mainPanel.ClientSize.Height / 2, arrowSize);
+                _radar = new Radar(mainPanel.ClientSize.Width / 2, mainPanel.ClientSize.Height / 2, arrowSize);
 
-                DrawConvexHullAndCoordinateSystem(doubleBuffer);
+                DrawConvexHullAndCoordinateSystem(_doubleBuffer);
 
-                graphics.DrawImage(bitmap, 0, 0);
+                _contolGraphics.DrawImage(_bitmap, 0, 0);
             }
         }
 
         private void shipTimer_Tick(object sender, EventArgs e)
         {
-            DrawConvexHullAndCoordinateSystem(doubleBuffer);
+            DrawConvexHullAndCoordinateSystem(_doubleBuffer);
 
-            sea.DrawShips(doubleBuffer);
+            _sea.DrawShips(_doubleBuffer);
 
-            if (radarState)
+            if (_radarState)
             {
                 CheckShips();
 
-                for (int i = 0; i < 15; i++)
+                for (var i = 0; i < 15; i++)
                 {
-                    radar.MoveArrow();
-                    doubleBuffer.DrawLine(new Pen(Color.ForestGreen, 2), radar.XBegin, radar.YBegin, radar.XCoordinate, radar.YCoordinate);
+                    _radar.MoveArrow();
+                    _doubleBuffer.DrawLine(new Pen(Color.ForestGreen, 2), _radar.XBegin, _radar.YBegin, _radar.XCoordinate,
+                        _radar.YCoordinate);
                 }
             }
 
-            
-            graphics.DrawImage(bitmap, 0 ,0);
-            sea.MoveShips();
+
+            _contolGraphics.DrawImage(_bitmap, 0, 0);
+            _sea.MoveShips();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -271,7 +266,7 @@ namespace ConvexHullScanning
 
         private void startMoveShipsBtn_Click(object sender, EventArgs e)
         {
-            sea = new SeaMap(50, 50, 2, mainPanel);
+            _sea = new SeaMap(50, 50, 2, mainPanel);
             shipTimer.Start();
         }
 
@@ -282,27 +277,25 @@ namespace ConvexHullScanning
 
         private void buildMBOBtn_Click(object sender, EventArgs e)
         {
-            if (pointCount > 2)
+            if (_pointAmount > 2)
             {
                 sortPoints.Items.Clear();
 
-                convexHull.CreateConvexHull();
+                _convexHull.CreateConvexHull();
 
-                foreach (PointF point in convexHull)
-                {
+                foreach (PointF point in _convexHull)
                     sortPoints.Items.Add(point.X + " " + point.Y);
-                }
 
-                DrawMBO();
+                DrawHull();
 
-                graphics.DrawImage(bitmap, 0, 0);
+                _contolGraphics.DrawImage(_bitmap, 0, 0);
             }
             else
             {
-                MessageBox.Show("There should be at least 3 points!");
+                MessageBox.Show(@"There should be at least 3 points!");
 
-                DrawConvexHullAndCoordinateSystem(doubleBuffer);
-                graphics.DrawImage(bitmap, 0, 0);
+                DrawConvexHullAndCoordinateSystem(_doubleBuffer);
+                _contolGraphics.DrawImage(_bitmap, 0, 0);
             }
         }
 
@@ -313,14 +306,14 @@ namespace ConvexHullScanning
 
         private void turnOnRadarBtn_Click(object sender, EventArgs e)
         {
-            int arrowSize = Math.Max(mainPanel.ClientSize.Width, mainPanel.ClientSize.Height);
-            radar = new Radar(mainPanel.ClientSize.Width/2, mainPanel.ClientSize.Height/2, arrowSize);
-            radarState = true;
+            var arrowSize = Math.Max(mainPanel.ClientSize.Width, mainPanel.ClientSize.Height);
+            _radar = new Radar(mainPanel.ClientSize.Width / 2, mainPanel.ClientSize.Height / 2, arrowSize);
+            _radarState = true;
         }
 
         private void turnOffRadarBtn_Click(object sender, EventArgs e)
         {
-            radarState = false;
+            _radarState = false;
         }
 
         #endregion

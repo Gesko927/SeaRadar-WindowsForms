@@ -1,4 +1,4 @@
-﻿namespace ConvexHullScanning
+﻿namespace ConvexHullScan
 {
     partial class MainForm
     {

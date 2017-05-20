@@ -1,0 +1,60 @@
+Ship [1] entered at: 14:18:21.
+
+Ship [1] out at: 14:18:21.
+
+Ship [1] was 00:00:00.6136632.
+
+Ship [1] entered at: 14:18:23.
+
+Ship [1] out at: 14:18:24.
+
+Ship [1] was 00:00:01.6270672.
+
+Ship [2] entered at: 14:18:28.
+
+Ship [2] out at: 14:18:29.
+
+Ship [2] was 00:00:01.4390106.
+
+Ship [1] entered at: 14:18:31.
+
+Ship [1] out at: 14:18:32.
+
+Ship [1] was 00:00:00.2516523.
+
+Ship [1] entered at: 09:24:32.
+
+Ship [1] out at: 09:24:32.
+
+Ship [1] was 00:00:00.5001121.
+
+Ship [2] entered at: 09:24:34.
+
+Ship [2] out at: 09:24:34.
+
+Ship [2] was 00:00:00.8631589.
+
+Ship [2] entered at: 09:24:37.
+
+Ship [1] entered at: 09:24:37.
+
+Ship [1] out at: 09:24:38.
+
+Ship [1] was 00:00:00.6287275.
+
+Ship [2] out at: 09:24:39.
+
+Ship [2] was 00:00:01.5733468.
+
+Ship [1] entered at: 09:24:41.
+
+Ship [1] out at: 09:24:42.
+
+Ship [1] was 00:00:01.1232970.
+
+Ship [2] entered at: 09:24:43.
+
+Ship [2] out at: 09:24:43.
+
+Ship [2] was 00:00:00.1958327.
+

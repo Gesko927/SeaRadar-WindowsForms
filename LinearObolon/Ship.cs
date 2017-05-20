@@ -1,99 +1,103 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Drawing;
 using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Forms;
 
-namespace ConvexHullScanning
+namespace ConvexHullScan
 {
-    class Ship
+    internal class Ship
     {
-        private Point position;
-        private Point direction;
-        private Point enter;
-        private Point exit;
-        private Point scale;
-        private PointF ort;
+        #region Private Fields
 
-        public Stopwatch shipTimer = new Stopwatch();
+        private Point _direction;
+        private Point _enter;
+        private Point _exit;
+        private PointF _ort;
+        private Point _position;
+        private Point _scale;
+        
+        private List<string> _countries;
+        private Random _random;
 
-        public Point Position
-        {
-            get
-            {
-                return position;
-            }
-        }
+        #endregion
+
+        #region Public Fields
+
+        public readonly Stopwatch ShipTimer = new Stopwatch();
+        public Point Position => _position;
+
+        public string _country;
+        public string _number;
+        public bool _hasAllow;
+
+        #endregion
 
         public Ship()
         {
-            position.X = 0;
-            position.Y = 0;
+            _random = new Random();
+            _countries = new List<string>(){"Ukraine", "Poland", "Russia", "Spain", "Germany", "USA", "Italy"};
+            _position.X = 0;
+            _position.Y = 0;
 
-            direction.X = 0;
-            direction.Y = 0;
+            _direction.X = 0;
+            _direction.Y = 0;
 
-            ort.X = 0;
-            ort.Y = 0;
+            _ort.X = 0;
+            _ort.Y = 0;
 
-            enter.X = 0;
-            enter.Y = 0;
+            _enter.X = 0;
+            _enter.Y = 0;
 
-            exit.X = 0;
-            exit.Y = 0;
+            _exit.X = 0;
+            _exit.Y = 0;
+
+            _country = _countries[_random.Next(0,7)];
+            _hasAllow = (_random.Next(0, 1) == 1);
+            _number = $"{_random.Next(1, 23)} - {_country} - {_random.Next(5, 76)}";
         }
 
         public Ship(Point enter, Point exit, int size, Point scale)
         {
-            this.scale = scale;
+            _random = new Random();
+            _countries = new List<string>() { "Ukraine", "Poland", "Russia", "Spain", "Germany", "USA", "Italy" };
+            _scale = scale;
 
             if (enter.X == 0)
-            {
-                this.position.X = 0;
-            }
+            { _position.X = 0;}
             else if (enter.X > 0 && enter.X < size - 1)
-            {
-                this.position.X = (enter.X) * scale.X;
-            }
+            { _position.X = enter.X * scale.X;}
             else
-            {
-                this.position.X = (enter.X + 1) * scale.X;
-            }
+            { _position.X = (enter.X + 1) * scale.X;}
 
             if (enter.Y == 0)
-            {
-                this.position.Y = 0;
-            }
+            { _position.Y = 0;}
             else if (enter.Y > 0 && enter.Y < size - 1)
-            {
-                this.position.Y = (enter.Y) * scale.Y;
-            }
+            { _position.Y = enter.Y * scale.Y;}
             else
-            {
-                this.position.Y = (enter.Y - 1) * scale.Y;
-            }
+            { _position.Y = (enter.Y - 1) * scale.Y;}
 
 
-            this.enter = enter;
-            this.exit = exit;
+            _enter = enter;
+            _exit = exit;
 
-            ortDefinition(size);
+            OrtDefinition();
 
-            direction.X = (enter.X < exit.X) ? 1 : ((enter.X > exit.X) ? -1 : 0);//1 right, -1 left
-            direction.Y = (enter.Y < exit.Y) ? 1 : ((enter.Y > exit.Y) ? -1 : 0);//1 down, -1 up
+            _direction.X = enter.X < exit.X ? 1 : (enter.X > exit.X ? -1 : 0); //1 right, -1 left
+            _direction.Y = enter.Y < exit.Y ? 1 : (enter.Y > exit.Y ? -1 : 0); //1 down, -1 up
+
+            _country = _countries[_random.Next(0, 7)];
+            _hasAllow = (_random.Next(0, 1) == 1);
+            _number = $"{_random.Next(1, 23)} - {_country} - {_random.Next(5, 76)}";
         }
 
-        private void ortDefinition(int size)
+        private void OrtDefinition()
         {
             double k = 0;
 
             try
             {
-                k = (double)(exit.Y - enter.Y) / (exit.X - enter.X);
+                k = (double) (_exit.Y - _enter.Y) / (_exit.X - _enter.X);
             }
             catch (DivideByZeroException e)
             {
@@ -104,15 +108,19 @@ namespace ConvexHullScanning
                 MessageBox.Show(e.ToString());
             }
 
-            ort.X = 1;
-            ort.Y = (float)(k * ort.X);
+            _ort.X = 1;
+            _ort.Y = (float) (k * _ort.X);
         }
 
         public void MoveShip()
         {
-            position.X += (int)((direction.X == 1) ? ort.X * scale.X : ((direction.X == -1) ? -ort.X * scale.X : 0));
-            position.Y += (int)((direction.Y == 1) ? ort.Y * scale.Y : ((direction.Y == -1) ? -ort.Y * scale.Y : 0));
-        }
+            _position.X += (int) (_direction.X == 1
+                ? _ort.X * _scale.X
+                : (_direction.X == -1 ? -_ort.X * _scale.X : 0));
 
+            _position.Y += (int) (_direction.Y == 1
+                ? _ort.Y * _scale.Y
+                : (_direction.Y == -1 ? -_ort.Y * _scale.Y : 0));
+        }
     }
 }

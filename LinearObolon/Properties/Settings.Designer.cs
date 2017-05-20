@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ConvexHullScanning.Properties
+namespace ConvexHullScan.Properties
 {
 
 
