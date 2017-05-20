@@ -11,7 +11,8 @@ For correct start you also need:
 2)BunifuUI Framework - https://devtools.bunifu.co.ke/ 7 Day Trial
 
 Start sequence:
-1) Choose points on main control, coordinate system, by mouse click
-2) Press start button (Play) at lower left corner to build convex hull
-3) Press button with ship icon to launch ships
-4) Press button with radar icon to start scanning area (lower right corner)
+1) Press refresh button (lower left corner)
+2) Choose points on main control, coordinate system, by mouse click
+3) Press start button (Play) at lower left corner to build convex hull
+4) Press button with ship icon to launch ships
+5) Press button with radar icon to start scanning area (lower right corner)
