@@ -18,7 +18,7 @@ namespace ConvexHullScan
             Width = 10;
             _height = 10;
 
-            var amountOfShips = 1;
+            var amountOfShips = 10;
 
             _random = new Random();
 
@@ -65,7 +65,7 @@ namespace ConvexHullScan
                     Ships[i] = CreateShip();
                 }
                 graphics.DrawImage(
-                    Image.FromFile(@"C:\Users\Gesko927\OneDrive\Visual Projects\Ball\Ball\bin\Debug\Ship.png"),
+                    Image.FromFile(@"C:\Users\GeskoPC\Documents\SeaRadar-WindowsForms\LinearObolon\bin\Debug\Ship.png"),
                     Ships[i].Position.X, Ships[i].Position.Y);
             }
         }
